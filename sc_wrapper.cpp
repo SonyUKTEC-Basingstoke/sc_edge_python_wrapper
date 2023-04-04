@@ -24,6 +24,15 @@ sc_dnn_config_t* create_dnn_config(){
     return NULL;
 }
 
+sc_rect_t create_sc_rect_t(int left, int top, int width, int height){
+    sc_rect_t rect;
+    rect.left = left;
+    rect.top = top;
+    rect.width = width;
+    rect.height = height;
+    return rect;
+}
+
 int sc_initialise(sc_app_config_t* app_config){
     return sc_init(app_config);
 }
@@ -44,6 +53,38 @@ int sc_starts(){
     return sc_start(E_START_MODE_RAW_ONLY, sc_proc_dnn_output_callback, sc_proc_raw_output_callback);
 }
 
+int sc_sets_dnn_crop_size(sc_rect_t rect){
+    return sc_set_dnn_crop_size(&rect);
+}
+
+int sc_gets_dnn_crop_size(sc_rect_t* rect){
+    return sc_get_dnn_crop_size(rect);
+}
+
+int sc_sets_rot_angle(){
+    return 0;
+}
+
+int sc_gets_rot_angle(){
+    return 0;
+}
+
+int sc_sets_frame_rate(){
+    return 0;
+}
+
+int sc_gets_frame_rate(){
+    return 0;
+}
+
+int sc_sets_exec_dnn_index(uint8_t nw_ordinal){
+    return sc_set_exec_dnn_index(nw_ordinal);
+}
+
+int sc_gets_exec_dnn_index(uint8_t nw_ordinal){
+    return sc_get_exec_dnn_index(&nw_ordinal);
+}
+
 
 PYBIND11_MODULE(sc_wrapper, m){
     m.doc() = "sc_wrapper";
@@ -56,4 +97,10 @@ PYBIND11_MODULE(sc_wrapper, m){
     m.def("create_dnn_config", &create_dnn_config, "create dnn_config");
     class_<sc_app_config_t>(m, "sc_app_config_t");
     class_<sc_dnn_config_t>(m, "sc_dnn_config_t");
+    class_<sc_rect_t>(m, "sc_rect_t")
+        .def(py::init<>())
+        .def_readwrite("left", &sc_rect_t::left)
+        .def_readwrite("top", &sc_rect_t::top)
+        .def_readwrite("width", &sc_rect_t::width)
+        .def_readwrite("height", &sc_rect_t::height);
 }
